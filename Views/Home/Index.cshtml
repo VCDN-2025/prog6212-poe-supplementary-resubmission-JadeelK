@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to CMCS</h1>
+    <p>Contract Monthly Claim System</p>
+
+    @if (Context.Session.GetString("UserRole") == null)
+    {
+        <form asp-action="Login" method="post">
+            <label>Select Role (Demo):</label>
+            <select name="role">
+                <option value="Lecturer">Lecturer</option>
+                <option value="Coordinator">Coordinator</option>
+                <option value="Manager">Manager</option>
+                <option value="HR">HR</option>
+            </select>
+            <button type="submit">Login</button>
+        </form>
+    }
+    else
+    {
+        <p>Logged in as: @Context.Session.GetString("UserRole")</p>
+        <a asp-action="Logout">Logout</a>
+    }
+
+    <ul>
+        <li><a asp-controller="Claims" asp-action="Index">My Claims</a></li>
+        <li><a asp-controller="HR" asp-action="Index">HR Dashboard (HR only)</a></li>
+        <li><a asp-controller="HR" asp-action="ManageUsers">Manage Users (HR only)</a></li>
+    </ul>
+</div>

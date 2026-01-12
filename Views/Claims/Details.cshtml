@@ -1,0 +1,63 @@
+﻿@model CMCS.Models.Claim
+
+@{
+    ViewData["Title"] = "Claim Details";
+}
+
+<h1>Claim Details</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ClaimId)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.ClaimId)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.LecturerName)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.LecturerName)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.PeriodMonth)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.PeriodMonth)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.HoursWorked)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.HoursWorked)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.HourlyRate)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.HourlyRate)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.TotalAmount)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.TotalAmount)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Status)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Status)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.SubmittedAt)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.SubmittedAt)</dd>
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Notes)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Notes)</dd>
+</dl>
+
+<h2>Supporting Documents</h2>
+<ul>
+    @foreach (var doc in ViewBag.Documents)
+    {
+        <li>@doc.FileName (Size: @doc.FileSizeKB KB) - <a asp-controller="Claims" asp-action="DownloadDocument" asp-route-id="@doc.DocumentId">Download</a></li>
+    }
+</ul>
+
+<h2>Approvals</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Name</th>
+            <th>Decision</th>
+            <th>Comments</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in ViewBag.Approvals)
+        {
+            <tr>
+                <td>@app.ApproverRole</td>
+                <td>@app.ApproverName</td>
+                <td>@app.Decision</td>
+                <td>@app.Comments</td>
+                <td>@app.ApprovedAt</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to List</a>

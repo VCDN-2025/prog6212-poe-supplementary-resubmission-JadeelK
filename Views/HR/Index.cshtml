@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<h1>HR Dashboard</h1>
+
+<p>Pending Claims: @ViewBag.PendingClaims</p>
+<p>Approved Claims: @ViewBag.ApprovedClaims</p>
+<p>Total Payout: R @ViewBag.TotalPayout</p>
+
+<h2>All Claims Report</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Lecturer</th>
+            <th>Month</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in ViewBag.AllClaims)
+        {
+            <tr>
+                <td>@claim.ClaimId</td>
+                <td>@claim.LecturerName</td>
+                <td>@claim.PeriodMonth</td>
+                <td>@claim.TotalAmount</td>
+                <td>@claim.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

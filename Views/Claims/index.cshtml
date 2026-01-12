@@ -1,0 +1,135 @@
+﻿@model IEnumerable<CMCS.Models.Claim>
+
+@{
+    ViewData["Title"] = "Claims Management";
+    var role = ViewBag.UserRole as string ?? "";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="text-primary mb-0">
+            <i class="bi bi-file-earmark-text-fill me-2"></i>
+            Claims Overview
+        </h2>
+
+        @if (role == "Lecturer")
+        {
+            <a asp-action="Create" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle-fill me-2"></i>
+                Submit New Claim
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Lecturer</th>
+                            <th>Month</th>
+                            <th>Hours</th>
+                            <th>Rate</th>
+                            <th>Total (R)</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="9" class="text-center py-5 text-muted fs-5">
+                                    <i class="bi bi-inbox-fill fs-1 d-block mb-3 opacity-50"></i>
+                                    No claims found yet.<br />
+                                    @(role == "Lecturer" ? "Get started by submitting your first claim!" : "No claims available at this time.")
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.ClaimId</td>
+                                    <td>@item.LecturerName</td>
+                                    <td>@item.PeriodMonth</td>
+                                    <td>@item.HoursWorked</td>
+                                    <td>@item.HourlyRate.ToString("N2")</td>
+                                    <td class="fw-bold">@item.TotalAmount.ToString("N2")</td>
+                                    <td>
+                                        <span class="badge fs-6 px-3 py-2 rounded-pill
+                                                    @(item.Status == "Approved" ? "bg-success" :
+                                                                                            item.Status == "Rejected" ? "bg-danger" :
+                                                                                            item.Status == "Verified" ? "bg-info" :
+                                                                                            item.Status == "Submitted" ? "bg-warning text-dark" : "bg-secondary")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td>@item.SubmittedAt.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ClaimId"
+                                   class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="bi bi-eye-fill"></i> View
+                                </a>
+
+                                @if (role == "Coordinator" && item.Status == "Submitted")
+                                        {
+                                            <form asp-action="Approve" method="post" class="d-inline-block mt-1 mt-sm-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="claimId" value="@item.ClaimId" />
+                                                <div class="input-group input-group-sm">
+                                                    <select name="decision" class="form-select" style="max-width: 130px;">
+                                                        <option value="Approved">Approve</option>
+                                                        <option value="Rejected">Reject</option>
+                                                    </select>
+                                                    <input type="text" name="comments" class="form-control" placeholder="Comment" style="max-width: 180px;" />
+                                                    <button type="submit" class="btn btn-success">
+                                                        <i class="bi bi-check-lg"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        }
+
+                                        @if (role == "Manager" && item.Status == "Verified")
+                                        {
+                                            <form asp-action="Approve" method="post" class="d-inline-block mt-1 mt-sm-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="claimId" value="@item.ClaimId" />
+                                                <div class="input-group input-group-sm">
+                                                    <select name="decision" class="form-select" style="max-width: 130px;">
+                                                        <option value="Approved">Approve</option>
+                                                        <option value="Rejected">Reject</option>
+                                                    </select>
+                                                    <input type="text" name="comments" class="form-control" placeholder="Comment" style="max-width: 180px;" />
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="bi bi-check2-circle"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted text-center py-3">
+            Total claims shown: @Model.Count()
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<CMCS.Models.Lecturer>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h1>Manage Lecturers</h1>
+
+<a asp-action="CreateUser">Add New Lecturer</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.LecturerId)</th>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.ContractId)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.LecturerId)</td>
+                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.ContractId)</td>
+                <td>
+                    <a asp-action="EditUser" asp-route-id="@item.LecturerId">Edit</a> |
+                    <a asp-action="DeleteUser" asp-route-id="@item.LecturerId" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,101 @@
+﻿@model CMCS.Models.Claim
+
+@{
+    ViewData["Title"] = "Submit New Claim";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Submit Monthly Claim</h4>
+                </div>
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["Warning"] != null)
+                    {
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            @TempData["Warning"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <!-- Lecturer Selection -->
+                        <div class="mb-4">
+                            <label asp-for="LecturerId" class="form-label fw-bold">
+                                Lecturer <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="LecturerId" class="form-select" asp-items="@(new SelectList(ViewBag.Lecturers, "LecturerId", "FullName"))" required>
+                                <option value="">-- Please select a lecturer --</option>
+                            </select>
+                            <div class="form-text text-muted">Choose the lecturer this claim is for</div>
+                            <span asp-validation-for="LecturerId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Period Month -->
+                        <div class="mb-4">
+                            <label asp-for="PeriodMonth" class="form-label fw-bold">
+                                Period Month <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="PeriodMonth" class="form-control" placeholder="e.g., January 2026" required />
+                            <span asp-validation-for="PeriodMonth" class="text-danger"></span>
+                        </div>
+
+                        <!-- Hours Worked -->
+                        <div class="mb-4">
+                            <label asp-for="HoursWorked" class="form-label fw-bold">
+                                Hours Worked <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="HoursWorked" class="form-control" type="number" step="0.1" min="0.1" max="744" required />
+                            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+                        </div>
+
+                        <!-- Hourly Rate -->
+                        <div class="mb-4">
+                            <label asp-for="HourlyRate" class="form-label fw-bold">
+                                Hourly Rate (R) <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="HourlyRate" class="form-control" type="number" step="0.01" min="0.01" required />
+                            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <label asp-for="Notes" class="form-label fw-bold">Additional Notes</label>
+                            <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Any additional information, module codes, etc..."></textarea>
+                        </div>
+
+                        <!-- Supporting Documents -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Supporting Documents</label>
+                            <div class="form-text text-muted mb-2">Allowed: PDF, DOCX, XLSX (max 5MB each)</div>
+                            <input type="file" name="documents" multiple class="form-control" accept=".pdf,.docx,.xlsx" />
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle-fill me-2"></i>Submit Claim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
